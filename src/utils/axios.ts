@@ -53,4 +53,6 @@ export const endpoints = {
     forgotPassword: '/forgetPassword',
     resetPassword: '/resetPassword'
   },
+  metrics : '/metrics',
+  users : '/users',
 };
