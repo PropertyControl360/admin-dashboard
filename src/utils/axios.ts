@@ -49,7 +49,7 @@ export const endpoints = {
   auth: {
     me: '/profile',
     refer: '/referTo',
-    login: '/login',
+    login: '/adminLogin',
     forgotPassword: '/forgetPassword',
     resetPassword: '/resetPassword'
   },
