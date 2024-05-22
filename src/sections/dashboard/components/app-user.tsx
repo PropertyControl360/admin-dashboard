@@ -11,12 +11,13 @@ import IconButton from '@mui/material/IconButton';
 import Card, { CardProps } from '@mui/material/Card';
 import TableContainer from '@mui/material/TableContainer';
 
-
 import Label from 'src/components/label';
 import Iconify from 'src/components/iconify';
 import Scrollbar from 'src/components/scrollbar';
 import { TableHeadCustom } from 'src/components/table';
 import CustomPopover, { usePopover } from 'src/components/custom-popover';
+import { FormControlLabel, Switch } from '@mui/material';
+import { toggleUserActiveStatus } from 'src/api/user';
 
 // ----------------------------------------------------------------------
 
@@ -27,6 +28,15 @@ type RowProps = {
   isActive: boolean;
   email: string;
   phoneNumber: string;
+  createdAt: string; // Registration Timestamp
+  isEmailVerified: boolean;
+  tenancyInfo: {
+    activeTenancies: number;
+    inactiveTenancies: number;
+  };
+  subscriptionInfo: {
+    status: string;
+  };
 };
 
 interface Props extends CardProps {
@@ -34,15 +44,10 @@ interface Props extends CardProps {
   subheader?: string;
   tableData: RowProps[];
   tableLabels: any;
+  refetch: Function;
 }
 
-export default function AppUser({
-  title,
-  subheader,
-  tableData,
-  tableLabels,
-  ...other
-}: Props) {
+export default function AppUser({ title, subheader, tableData, tableLabels, refetch, ...other }: Props) {
   return (
     <Card {...other}>
       <CardHeader title={title} subheader={subheader} sx={{ mb: 3 }} />
@@ -54,7 +59,7 @@ export default function AppUser({
 
             <TableBody>
               {tableData.map((row) => (
-                <AppUserRow key={row.id} row={row} />
+                <AppUserRow key={row.id} row={row} refetch={refetch} />
               ))}
             </TableBody>
           </Table>
@@ -80,16 +85,16 @@ export default function AppUser({
 
 type AppUserRowProps = {
   row: RowProps;
+  refetch: Function;
 };
 
-function AppUserRow({ row }: AppUserRowProps) {
+function AppUserRow({ row , refetch}: AppUserRowProps) {
   const popover = usePopover();
 
   const handleDownload = () => {
     popover.onClose();
     console.info('DOWNLOAD', row.id);
   };
-
   const handlePrint = () => {
     popover.onClose();
     console.info('PRINT', row.id);
@@ -105,6 +110,41 @@ function AppUserRow({ row }: AppUserRowProps) {
     console.info('DELETE', row.id);
   };
 
+  const handleToggleActiveStatus = async (userId:string) => {
+    try {
+      await toggleUserActiveStatus(userId);
+      refetch();
+    } catch (error) {
+      console.error('Failed to toggle user active status', error);
+    }
+  };
+  const formatDate = (date: string) => {
+    const options = {
+      day: '2-digit',
+      month: 'long',
+      year: 'numeric',
+    } as Intl.DateTimeFormatOptions;
+    return new Date(date).toLocaleDateString('en-GB', options);
+  };
+  function getSubscriptionStatusLabel(status: string) {
+    if (status === 'active') {
+      return 'success';
+    } 
+    if (status === 'inactive') {
+      return 'error';
+    } 
+      return 'warning';
+    
+  }
+  
+  function getSubscriptionStatusText(status: string): string {
+    if (status === 'none') {
+      return 'Not Subscribed';
+    } 
+      return status;
+  }
+  
+
   return (
     <>
       <TableRow>
@@ -114,17 +154,42 @@ function AppUserRow({ row }: AppUserRowProps) {
 
         <TableCell>{row.phoneNumber}</TableCell>
 
-        <TableCell>
-          <Label
-            variant="soft"
-            color={
-              (row.isActive  && 'success') ||
-              (!row.isActive  && 'error') ||
-              'success'
-            }
-          >
-            {row.isActive ? "Active" : "Inactive"}
+        <TableCell>{formatDate(row.createdAt)}</TableCell>
+       <TableCell>
+         <Label color={getSubscriptionStatusLabel(row.subscriptionInfo.status)}>
+            {getSubscriptionStatusText(row.subscriptionInfo.status)}
           </Label>
+          </TableCell>
+        <TableCell>
+          <Label  variant="soft" color={row.isEmailVerified ? 'success' : 'error'}>
+            {row.isEmailVerified ? 'Verified' : 'Not Verified'}
+          </Label>
+        </TableCell>
+
+        <TableCell align="center">{row.tenancyInfo.activeTenancies}</TableCell>
+
+        <TableCell align="center">{row.tenancyInfo.inactiveTenancies}</TableCell>
+
+        <TableCell>
+        
+            <FormControlLabel
+              sx={{
+                width: '100%',
+              }}
+              control={
+                <Switch
+                  onChange={(event) => {
+                    handleToggleActiveStatus(row.id);
+                  }}
+                  checked={row.isActive}
+                  value={row.isActive}
+                  color="success"
+                  size="small"
+                />
+              }
+              label={row.isActive ? 'Active' : 'Inactive'}
+              labelPlacement="start"
+            />
         </TableCell>
 
         <TableCell align="right" sx={{ pr: 1 }}>
@@ -140,7 +205,6 @@ function AppUserRow({ row }: AppUserRowProps) {
         arrow="right-top"
         sx={{ width: 160 }}
       >
-
         <Divider sx={{ borderStyle: 'dashed' }} />
 
         <MenuItem onClick={handleDelete} sx={{ color: 'error.main' }}>

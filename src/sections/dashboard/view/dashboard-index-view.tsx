@@ -28,7 +28,7 @@ export default function DashboardView() {
   const settings = useSettingsContext();
   const { data: profile } = useSWR(endpoints.auth.me, fetcher);
   const { data: metricsData , isLoading: metricsLoading} = useSWR(endpoints.metrics, fetcher);
-  const { data: usersData } = useSWR(endpoints.users, fetcher);
+  const { data: usersData , mutate} = useSWR(endpoints.users, fetcher);
  
 
   
@@ -89,7 +89,7 @@ export default function DashboardView() {
          
         </Stack>
       </Grid>
-      <Grid xs={12} lg={8}>
+      <Grid xs={12} lg={12}>
           <AppUser
             title="App Users"
             tableData={users}
@@ -97,9 +97,15 @@ export default function DashboardView() {
               { id: 'name', label: 'Name' },
               { id: 'email', label: 'Email' },
               { id: 'phoneNumber', label: 'Phone Number' },
+              { id: 'createdAt', label: 'Registration Timestamp', align: 'left' },
+              { id: 'subscriptionStatus', label: 'Subscription Status', align: 'left' },
+              { id: 'isEmailVerified', label: 'Email Verification', align: 'left' },
+              { id: 'activeTenancies', label: 'Active Tenancies' },
+              { id: 'inactiveTenancy', label: 'Inactive Tenancies' },
               { id: 'status', label: 'Status' },
               { id: '' },
             ]}
+            refetch={mutate}
           />
         </Grid>
       </Grid>
