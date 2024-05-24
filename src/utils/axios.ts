@@ -55,4 +55,5 @@ export const endpoints = {
   },
   metrics : '/metrics',
   users : '/users',
+  errors : '/errors',
 };
