@@ -14,13 +14,6 @@ import AppErrorLog from '../components/error-log-table';
 
 // ----------------------------------------------------------------------
 
-export const _reminders = [...Array(12)].map((_, index) => ({
-  id: _mock.id(index),
-  title: _mock.sentence(index),
-  description: _mock.sentence(index),
-  nextReminder: _mock.time(index),
-}));
-
 export default function DashboardView() {
   const tableLabels = [
     { id: 'user', label: 'User', align: 'left' },
@@ -49,12 +42,12 @@ export default function DashboardView() {
 
   useEffect(() => {
     if (usersData) {
-      setUsers(usersData);
+      setUsers(usersData.slice(0, 5));
     }
   }, [usersData]);
   useEffect(() => {
     if (errorLogs) {
-      setErrorLogsList(errorLogs);
+      setErrorLogsList(errorLogs.slice(0, 5));
     }
   }, [errorLogs]);
 

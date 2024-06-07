@@ -10,6 +10,8 @@ import { LoadingScreen } from 'src/components/loading-screen';
 // ----------------------------------------------------------------------
 
 const IndexPage = lazy(() => import('src/pages/dashboard/dashboard'));
+const UsersPage = lazy(() => import('src/pages/dashboard/user'));
+const ErrorLogPage = lazy(() => import('src/pages/dashboard/errorLog'));
 
 
 
@@ -29,7 +31,9 @@ export const dashboardRoutes = [
       </AuthGuard>
     ),
     children: [
-      { element: <IndexPage />, index: true }
+      { element: <IndexPage />, index: true },
+      { path: 'users', element:  <UsersPage />},
+      { path: 'errorLogs', element: <ErrorLogPage />},
     ],
   },
 ];

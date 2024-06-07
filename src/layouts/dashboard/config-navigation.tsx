@@ -58,6 +58,16 @@ export function useNavData() {
         subheader: 'propertycontrol360',
         items: [
           { title: 'dashboard', path: paths.dashboard.root, icon: ICONS.dashboard },
+          {
+            title: 'users',
+            path: paths.dashboard.users.root,
+            icon: ICONS.finances,
+          },
+          {
+            title: 'errorLogs',
+            path: paths.dashboard.errorLogs.root,
+            icon: ICONS.documents,
+          },
         ],
       },
     ],
