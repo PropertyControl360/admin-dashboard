@@ -7,16 +7,16 @@ import TableRow from '@mui/material/TableRow';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import CardHeader from '@mui/material/CardHeader';
-import IconButton from '@mui/material/IconButton';
 import Card, { CardProps } from '@mui/material/Card';
 import TableContainer from '@mui/material/TableContainer';
 import Typography from '@mui/material/Typography';
-
+import { useLocation, useNavigate } from 'react-router-dom';
 import Label from 'src/components/label';
 import Iconify from 'src/components/iconify';
 import Scrollbar from 'src/components/scrollbar';
 import { TableHeadCustom } from 'src/components/table';
 import CustomPopover, { usePopover } from 'src/components/custom-popover';
+import { paths } from 'src/routes/paths';
 
 // ----------------------------------------------------------------------
 
@@ -44,6 +44,8 @@ interface Props extends CardProps {
 }
 
 export default function AppErrorLog({ title, subheader, tableData, tableLabels, ...other }: Props) {
+  const location = useLocation();
+  const navigate = useNavigate();
   return (
     <Card {...other}>
       <CardHeader title={title} subheader={subheader} sx={{ mb: 3 }} />
@@ -66,15 +68,17 @@ export default function AppErrorLog({ title, subheader, tableData, tableLabels, 
 
       <Divider sx={{ borderStyle: 'dashed' }} />
 
-      <Box sx={{ p: 2, textAlign: 'right' }}>
+     {location.pathname === paths.dashboard.root && <Box sx={{ p: 2, textAlign: 'right' }}>
         <Button
           size="small"
           color="inherit"
           endIcon={<Iconify icon="eva:arrow-ios-forward-fill" width={18} sx={{ ml: -0.5 }} />}
+          onClick={() => navigate(paths.dashboard.errorLogs.root)}
         >
           View All
         </Button>
       </Box>
+}
     </Card>
   );
 }

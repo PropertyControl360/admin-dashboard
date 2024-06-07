@@ -26,6 +26,13 @@ export const paths = {
   // DASHBOARD
   dashboard: {
     root: ROOTS.DASHBOARD,
+    users:
+    {
+      root: `${ROOTS.DASHBOARD}/users`,      
+    },
+    errorLogs : {
+      root : `${ROOTS.DASHBOARD}/errorLogs`,
+    }
   },
  // TERMS & CONDITIONS
   termsConditions: `${ROOTS.LEGAL}/termsAndConditions`,
