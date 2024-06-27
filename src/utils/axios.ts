@@ -1,10 +1,15 @@
 import axios, { AxiosRequestConfig } from 'axios';
 
-import { HOST_API } from 'src/config-global';
+import { HOST_API, HOST_PROD_API } from 'src/config-global';
 
 // ----------------------------------------------------------------------
+const getApiHost = () => {
+  const isProdValue = localStorage.getItem('is_prod');
+  const isProd = isProdValue ? JSON.parse(isProdValue) : false;
+  return isProd ? HOST_PROD_API : HOST_API;
+};
 
-const axiosInstance = axios.create({ baseURL: HOST_API });
+const axiosInstance = axios.create({ baseURL: getApiHost() });
 
 axiosInstance.interceptors.response.use(
   (res) => res,
