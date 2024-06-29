@@ -1,12 +1,16 @@
-name: CI-CD Pipeline for UAT
+name: CI/CD Pipeline
 
 on:
-    push:
-      branches: [ "UAT", "Dev" ]
+  push:
+    branches: [ "main" ]
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [21.x]
 
     steps:
     - name: Checkout the code
@@ -19,14 +23,38 @@ jobs:
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: eu-central-1
 
-    - name: Login to Amazon ECR
-      id: login-ecr
-      uses: aws-actions/amazon-ecr-login@v2
+    - name: Install Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
 
-    - name: Build, tag, and push image to Amazon ECR 
+    - name: Run CMD npm ci
       run: |
-        docker_tag="${GITHUB_REF_NAME}-${GITHUB_SHA:0:7}"
-        docker build -t propertycontrol-admin-dashboard .
-        docker tag propertycontrol-admin-dashboard:latest 281729579533.dkr.ecr.eu-central-1.amazonaws.com/propertycontrol-admin-dashboard:${docker_tag}
-        docker push 281729579533.dkr.ecr.eu-central-1.amazonaws.com/propertycontrol-admin-dashboard:${docker_tag}
+        npm ci --legacy-peer-deps
 
+    - name: Build Application
+      run: |
+        npm run build
+      env:
+        CI: false
+     
+    - name: Add version
+      run: |
+        pwd
+        ls -la 
+        BUILD_VERSION="${GITHUB_REF_NAME}-${GITHUB_SHA:0:7}"
+        echo "BUILD_VERSION=${BUILD_VERSION}" >> $GITHUB_ENV
+        mv dist "build-${BUILD_VERSION}"
+      
+    - name: Debug cmds
+      run: |
+        ls -la
+        pwd
+
+    - name: Zip the build
+      run: zip -r build-${{ env.BUILD_VERSION }}.zip build-${{ env.BUILD_VERSION }}/
+
+    - name: Upload a Build Artifact
+      uses: actions/upload-artifact@v4.3.3
+      with:
+          path: build-${{ env.BUILD_VERSION }}.zip
