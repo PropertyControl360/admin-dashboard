@@ -17,7 +17,7 @@ import Scrollbar from 'src/components/scrollbar';
 import { TableHeadCustom } from 'src/components/table';
 import CustomPopover, { usePopover } from 'src/components/custom-popover';
 import { FormControlLabel, Switch } from '@mui/material';
-import { toggleUserActiveStatus } from 'src/api/user';
+import { deleteUser, toggleUserActiveStatus } from 'src/api/user';
 import { paths } from 'src/routes/paths';
 
 // ----------------------------------------------------------------------
@@ -110,9 +110,16 @@ function AppUserRow({ row , refetch}: AppUserRowProps) {
     console.info('SHARE', row.id);
   };
 
-  const handleDelete = () => {
+  const handleDelete = async() => {
     popover.onClose();
     console.info('DELETE', row.id);
+    try {
+      await deleteUser(row.id);
+      refetch()
+    }
+    catch (error) {
+      console.error('Failed to delete user', error)
+    }
   };
 
   const handleToggleActiveStatus = async (userId:string) => {
