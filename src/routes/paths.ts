@@ -19,31 +19,35 @@ export const paths = {
       create: `${ROOTS.AUTH}/password/create-password/:token`,
       reset: `${ROOTS.AUTH}/password/reset-password`,
     },
-   
+
     resetPasswordVerify: `/resetPassword/:token`,
     resetPasswordVerifySuccess: `/resetSuccess`,
   },
   // DASHBOARD
   dashboard: {
     root: ROOTS.DASHBOARD,
-    users:
-    {
-      root: `${ROOTS.DASHBOARD}/users`,      
+    users: {
+      root: `${ROOTS.DASHBOARD}/users`,
+      detail: `${ROOTS.DASHBOARD}/users`,
+      view: (id: string) => `${ROOTS.DASHBOARD}/users/detail/${id}`,
     },
-    errorLogs : {
-      root : `${ROOTS.DASHBOARD}/errorLogs`,
-    }
+    tenancies: {
+      root: `${ROOTS.DASHBOARD}/tenancies`,
+      tenancyCreate: `${ROOTS.DASHBOARD}/tenancies/create`,
+    },
+    errorLogs: {
+      root: `${ROOTS.DASHBOARD}/errorLogs`,
+    },
   },
- // TERMS & CONDITIONS
+  // TERMS & CONDITIONS
   termsConditions: `${ROOTS.LEGAL}/termsAndConditions`,
 
   // this is used as a placeholder change to the above line
   // termsConditions: `https://propertycontrol360.com/terms-and-conditions/`,
 
-
   // PRIVACY POLICY
   privacyPolicy: `${ROOTS.LEGAL}/privacy`,
 
-    // this is used as a placeholder change to the above line
+  // this is used as a placeholder change to the above line
   // privacyPolicy: `https://propertycontrol360.com/privacy-policy`,
 };

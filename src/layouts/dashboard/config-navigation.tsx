@@ -62,9 +62,11 @@ export function useNavData() {
             title: 'users',
             path: paths.dashboard.users.root,
             icon: ICONS.finances,
+            children: [
+            ]
           },
           {
-            title: 'errorLogs',
+            title: 'Application ErrorLogs',
             path: paths.dashboard.errorLogs.root,
             icon: ICONS.documents,
           },
