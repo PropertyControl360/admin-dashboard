@@ -2,7 +2,7 @@ name: CI/CD Pipeline
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
 
 jobs:
   build-and-deploy:
@@ -16,7 +16,7 @@ jobs:
     - name: Checkout the code
       uses: actions/checkout@v4
 
-    - name: Configure AWS ECR User Credentials 
+    - name: Configure AWS Credentials
       uses: aws-actions/configure-aws-credentials@v4
       with:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
@@ -28,33 +28,37 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
 
-    - name: Run CMD npm ci
-      run: |
-        npm ci --legacy-peer-deps
+    - name: Install dependencies
+      run: npm ci --legacy-peer-deps
 
-    - name: Build Application
-      run: |
-        npm run build
+    - name: Build application
+      run: npm run build
       env:
         CI: false
      
-    - name: Add version
+    - name: Add version to build
       run: |
-        pwd
-        ls -la 
         BUILD_VERSION="${GITHUB_REF_NAME}-${GITHUB_SHA:0:7}"
         echo "BUILD_VERSION=${BUILD_VERSION}" >> $GITHUB_ENV
         mv dist "build-${BUILD_VERSION}"
-      
-    - name: Debug cmds
-      run: |
-        ls -la
-        pwd
 
     - name: Zip the build
       run: zip -r build-${{ env.BUILD_VERSION }}.zip build-${{ env.BUILD_VERSION }}/
 
-    - name: Upload a Build Artifact
-      uses: actions/upload-artifact@v4.3.3
+    - name: Upload build artifact
+      uses: actions/upload-artifact@v4
       with:
-          path: build-${{ env.BUILD_VERSION }}.zip
+        name: build-${{ env.BUILD_VERSION }}.zip
+        path: build-${{ env.BUILD_VERSION }}.zip
+
+    - name: Deploy to S3
+      run: |
+        aws s3 sync build-${{ env.BUILD_VERSION }}/ s3://admin.propertycontrol360.com/ --delete
+      env:
+        AWS_REGION: eu-central-1
+
+    - name: Invalidate CloudFront cache
+      run: |
+        aws cloudfront create-invalidation --distribution-id E30E1F8GTTME9A --paths "/*"
+      env:
+        AWS_REGION: eu-central-1
