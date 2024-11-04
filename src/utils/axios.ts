@@ -27,23 +27,26 @@ export const fetcher = async (args: string | [string, AxiosRequestConfig]) => {
 
   return res.data;
 };
-export const fetcherWithId = async (args: string | [string, string] |  [string, string, AxiosRequestConfig] ) => {
-  const [url, id,  config] = Array.isArray(args) ? args : [args];
+export const fetcherWithId = async (
+  args: string | [string, string] | [string, string, AxiosRequestConfig]
+) => {
+  const [url, id, config] = Array.isArray(args) ? args : [args];
 
   const res = await axiosInstance.get(`${url}/${id}`, { ...config });
 
   return res.data;
 };
 
-export const deleteWithId = async (args: string | [string, string] |  [string, string, AxiosRequestConfig] ) => {
-  const [url, id,  config] = Array.isArray(args) ? args : [args];
+export const deleteWithId = async (
+  args: string | [string, string] | [string, string, AxiosRequestConfig]
+) => {
+  const [url, id, config] = Array.isArray(args) ? args : [args];
   if (id) {
     const res = await axiosInstance.delete(`${url}/${id}`, { ...config });
     return res.data;
   }
   return null;
 };
-
 
 // ----------------------------------------------------------------------
 
@@ -56,9 +59,10 @@ export const endpoints = {
     refer: '/referTo',
     login: '/adminLogin',
     forgotPassword: '/forgetPassword',
-    resetPassword: '/resetPassword'
+    resetPassword: '/resetPassword',
   },
-  metrics : '/metrics',
-  users : '/users',
-  errors : '/errors',
+  metrics: '/metrics',
+  users: '/users',
+  errors: '/errors',
+  email: '/email',
 };

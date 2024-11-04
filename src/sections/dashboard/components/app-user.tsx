@@ -160,7 +160,14 @@ export default function AppUser({ title, subheader, tableData, tableLabels, refe
     page * rowsPerPage,
     page * rowsPerPage + rowsPerPage
   );
+  const handleChangePage = (event: unknown, newPage: number) => {
+    setPage(newPage);
+  };
 
+  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
 
 
 
@@ -278,53 +285,14 @@ export default function AppUser({ title, subheader, tableData, tableLabels, refe
           </Button>
         </Box>
       )}
-      <Grid container justifyContent="flex-end" alignItems="center" mb={4} mt={4} >
-        <Grid item md={7} >
-          <Grid container justifyContent="flex-end" alignItems="flex-end">
-            <Pagination
-              count={Math.ceil(filteredData.length / pageSize)}
-              shape="rounded"
-              page={pageIndex}
-              // eslint-disable-next-line @typescript-eslint/no-shadow
-              onChange={(_, page) => setPageIndex(page)}
-              sx={{
-                '& .MuiPaginationItem-root.Mui-selected': {
-                  backgroundColor: '#0085FF',
-                },
-              }}
-            />
-          </Grid>
-        </Grid>
-        <Grid item md={1} lg={1} xl={0.6} mr={3} >
-          <Select
-            labelId=""
-            id="simple-select-pageSize"
-            sx={{
-              width: '100%',
-              border: '1px solid #0085FF',
-              height: '40px',
-              '& fieldset': { border: 'none' },
-            }}
-            size="small"
-            value={pageSize}
-            label=""
-            disabled={filteredData.length === 0}
-            onChange={(e) => {
-              const newPageSize = e.target.value as number;
-              const newMaxPageIndex = Math.ceil(filteredData.length / newPageSize);
-              const currentPageIndex = Math.min(pageIndex, newMaxPageIndex);
-              setPageSize(newPageSize);
-              setPageIndex(currentPageIndex);
-            }}
-          >
-            {[5, 7, 10, 15, 25].map((term) => (
-              <MenuItem value={term} key={term}>
-                {term}
-              </MenuItem>
-            ))}
-          </Select>
-        </Grid>
-      </Grid>
+      {/* Pagination */}
+      <TablePaginationCustom
+        count={filteredData.length}
+        page={page}
+        rowsPerPage={rowsPerPage}
+        onPageChange={handleChangePage}
+        onRowsPerPageChange={handleChangeRowsPerPage}
+      />
     </Card>
   );
 }
@@ -351,6 +319,8 @@ enum SortBy {
 function AppUserRow({ row, refetch }: AppUserRowProps) {
   const popover = usePopover();
   const navigate = useNavigate();
+  const location = useLocation();
+
   const handleDownload = () => {
     popover.onClose();
     console.info('DOWNLOAD', row.id);
@@ -374,6 +344,22 @@ function AppUserRow({ row, refetch }: AppUserRowProps) {
     } catch (error) {
       console.error('Failed to delete user', error);
     }
+  };
+
+  const handleUserDetail = () => {
+    popover.onClose();
+    // check if the path contains user or not
+    const path = location.pathname.split('/');
+    const nav = path.includes('users') ? `detail/${row.id}` : `users/detail/${row.id}`;
+    navigate(nav);
+  };
+
+  const handleUserEmail = () => {
+    popover.onClose();
+    // check if the path contains user or not
+    const path = location.pathname.split('/');
+    const nav = path.includes('users') ? `email/${row.id}` : `users/email/${row.id}`;
+    navigate(nav);
   };
 
   const handleToggleActiveStatus = async (userId: string) => {
@@ -474,9 +460,13 @@ function AppUserRow({ row, refetch }: AppUserRowProps) {
           <Iconify icon="solar:trash-bin-trash-bold" />
           Delete
         </MenuItem>
-        <MenuItem onClick={() => navigate(`detail/${row.id}`)} sx={{ color: 'error.main' }}>
+        <MenuItem onClick={handleUserDetail} sx={{ color: 'error.main' }}>
           <Iconify icon="mdi:alert" />
           Errors
+        </MenuItem>
+        <MenuItem onClick={handleUserEmail} sx={{ color: 'primary.main' }}>
+          <Iconify icon="mdi:email" />
+          Emails
         </MenuItem>
       </CustomPopover >
     </>
