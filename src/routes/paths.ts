@@ -29,6 +29,7 @@ export const paths = {
     users: {
       root: `${ROOTS.DASHBOARD}/users`,
       detail: `${ROOTS.DASHBOARD}/users`,
+      viewByEmail: (id: string) => `${ROOTS.DASHBOARD}/users/email/${id}`,
       view: (id: string) => `${ROOTS.DASHBOARD}/users/detail/${id}`,
     },
     tenancies: {

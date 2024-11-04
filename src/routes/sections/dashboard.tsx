@@ -6,6 +6,7 @@ import DashboardLayout from 'src/layouts/dashboard';
 
 import { LoadingScreen } from 'src/components/loading-screen';
 import UserDetail from "src/sections/users/detail";
+import UserEmailDetail from "src/sections/users/emails";
 
 
 // ----------------------------------------------------------------------
@@ -37,6 +38,7 @@ export const dashboardRoutes = [
         path: 'users', children: [
           { element: <UsersPage />, index: true },
           { path: 'detail/:id', element: < UserDetail /> },
+          { path: 'email/:id', element: < UserEmailDetail /> },
         ]
       },
       { path: 'errorLogs', element: <ErrorLogPage /> },

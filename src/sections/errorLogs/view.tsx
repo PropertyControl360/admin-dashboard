@@ -13,7 +13,7 @@ import AppErrorLog from '../dashboard/components/error-log-table';
 
 export default function ErrorLogView() {
   const tableLabels = [
-    { id: 'user', label: 'User', align: 'left' },
+    { id: 'system', label: 'System Error', align: 'left' },
     { id: 'errorMessage', label: 'Error Message', align: 'left' },
     { id: 'errorType', label: 'Error Type', align: 'left' },
     { id: 'timestamp', label: 'Timestamp', align: 'left' },
