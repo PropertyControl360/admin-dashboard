@@ -19,7 +19,7 @@ const UserEmailDetail = () => {
     { id: 'email', label: 'Email', align: 'left' },
     { id: 'message', label: 'Email Message', align: 'left' },
     { id: 'reason', label: 'Email Reason', align: 'left' },
-    { id: 'status', Label: 'Email status', align: 'left' },
+    { id: 'status', label: 'Email Status', align: 'left' },
     { id: 'timestamp', label: 'Timestamp', align: 'left' },
   ];
 
@@ -47,28 +47,28 @@ const UserEmailDetail = () => {
               icon="mdi:email-check"
               color="success"
               isLoading={isLoading}
-              count={metricsData?.totalEmailSentToday || 0}
+              count={metricsData?.data?.totalEmailSentToday || 0}
             />
             <DataDisplayCard
               title="Failed Emails per day"
               icon="mdi:email-remove"
               color="error"
               isLoading={isLoading}
-              count={metricsData?.totalEmailSentNotToday || 0}
+              count={metricsData?.data?.totalEmailSentNotToday || 0}
             />
             <DataDisplayCard
               title="Total Email sent"
               icon="mdi:email-check"
               color="success"
               isLoading={isLoading}
-              count={metricsData?.totalEmailSent || 0}
+              count={metricsData?.data?.totalEmailSent || 0}
             />
             <DataDisplayCard
               title="Total Failed Emails"
               icon="mdi:email-remove"
               color="error"
               isLoading={isLoading}
-              count={metricsData?.totalEmailNotSent || 0}
+              count={metricsData?.data?.totalEmailNotSent || 0}
             />
           </Stack>
         </Grid>
@@ -77,7 +77,7 @@ const UserEmailDetail = () => {
           <EmailDetails
             title="Email Logs"
             subheader="Email logs"
-            tableData={[]}
+            tableData={emailLogs?.data || []}
             tableLabels={tableLabels}
           />
         </Grid>
