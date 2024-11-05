@@ -41,6 +41,7 @@ type EmailLogProps = {
   status: boolean;
   createdAt: string;
   user?: User;
+  email: string;
 };
 
 interface Props extends CardProps {
@@ -180,18 +181,6 @@ export default function EmailDetails({ title, subheader, tableData, tableLabels,
 
       <Divider sx={{ borderStyle: 'dashed' }} />
 
-      {location.pathname === paths.dashboard.root && (
-        <Box sx={{ p: 2, textAlign: 'right' }}>
-          <Button
-            size="small"
-            color="inherit"
-            endIcon={<Iconify icon="eva:arrow-ios-forward-fill" width={18} sx={{ ml: -0.5 }} />}
-            onClick={() => navigate(paths.dashboard.errorLogs.root)}
-          >
-            View All
-          </Button>
-        </Box>
-      )}
 
       {/* Pagination */}
       <TablePaginationCustom
@@ -224,27 +213,24 @@ function EmailLog({ row }: EmailLogRowProps) {
   };
 
 
-
   return (
     <TableRow hover>
       <TableCell>
         <Typography variant="body2" color="text.primary">
-          {row?.user?.email || ''}
+          {row?.email || ''}
         </Typography>
+      </TableCell>
+      <TableCell>
         <Typography variant="caption" color="text.secondary">
-          {row.user?.email || 'No Email'}
+          {row?.message}
         </Typography>
       </TableCell>
       <TableCell>
         <Typography variant="body2" color="text.primary">
-          {row.message}
+          {row.reason}
         </Typography>
       </TableCell>
       <TableCell>
-        {row.reason}
-      </TableCell>
-      <TableCell>
-        {row.status}
         <Label color={row.status ? 'success' : 'error'}>{row.status ? 'Sent' : 'Failed'}</Label>
       </TableCell>
       <TableCell>
