@@ -52,6 +52,7 @@ type RowProps = {
   phoneNumber: string;
   createdAt: string; // Registration Timestamp
   isEmailVerified: boolean;
+  fileUploadSize: number;
   tenancyInfo: {
     activeTenancies: number;
     inactiveTenancies: number;
@@ -419,7 +420,7 @@ function AppUserRow({ row, refetch }: AppUserRowProps) {
         <TableCell align="center">{row.tenancyInfo.activeTenancies}</TableCell>
 
         <TableCell align="center">{row.tenancyInfo.inactiveTenancies}</TableCell>
-
+        <TableCell align="center">{row.fileUploadSize}</TableCell>
         <TableCell>
           <FormControlLabel
             sx={{

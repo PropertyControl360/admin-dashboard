@@ -13,10 +13,9 @@ import AppUser from '../dashboard/components/app-user';
 // ----------------------------------------------------------------------
 
 export default function UsersView() {
-  
+
   const settings = useSettingsContext();
   const { data: usersData, mutate } = useSWR(endpoints.users, fetcher);
-
   const [users, setUsers] = useState<[]>([]);
 
 
@@ -26,7 +25,7 @@ export default function UsersView() {
       setUsers(usersData);
     }
   }, [usersData]);
- 
+
 
   return (
     <Container maxWidth={settings.themeStretch ? false : 'xl'}>
@@ -44,6 +43,7 @@ export default function UsersView() {
               { id: 'isEmailVerified', label: 'Email Verification', align: 'left' },
               { id: 'activeTenancies', label: 'Active Tenancies' },
               { id: 'inactiveTenancy', label: 'Inactive Tenancies' },
+              { id: 'fileUploadSize', label: 'Total Upload' },
               { id: 'status', label: 'Status' },
               { id: '' },
             ]}
