@@ -99,6 +99,7 @@ export default function DashboardView() {
               { id: 'isEmailVerified', label: 'Email Verification', align: 'left' },
               { id: 'activeTenancies', label: 'Active Tenancies' },
               { id: 'inactiveTenancy', label: 'Inactive Tenancies' },
+              { id: 'fileUploadSize', label: 'Total Upload' },
               { id: 'status', label: 'Status' },
               { id: '' },
             ]}
